@@ -1,31 +1,31 @@
 /*
     Status:
-        [ ] In Progress
-	[T] In Test Process
-        [X] Done
+    [ ] In Progress
+    [T] In Test Process
+    [X] Done
 */
 
 // [ ]
 metadata {
   definition (
     name: "Aeotec Door/Window Sensor 7 Pro EU",
-	  // ?????
+    // ?????
     namespace: "hubitat.antonov",
-	  // ?????
+    // ?????
     author: "Antonov, Oleksiy",
     importUrl: "https://raw.githubusercontent.com/OleksiyAntonov/hubitatDriversApps/main/drivers/aeotec/zwa-012/zwa-012.groovy"
   ) {
     capability "Contact Sensor"
-		capability "Sensor"
-		// capability "Battery"
-		// capability "Configuration"
-		// capability "Health Check"
+        capability "Sensor"
+        // capability "Battery"
+        // capability "Configuration"
+        // capability "Health Check"
 
-		// fingerprint deviceId: "0x0701", inClusters: "0x5E,0x86,0x72,0x98", outClusters: "0x5A,0x82"
+        // fingerprint deviceId: "0x0701", inClusters: "0x5E,0x86,0x72,0x98", outClusters: "0x5A,0x82"
 
-    // [ ]
-		fingerprint mfr: "0371", prod: "0102", model: "0007", deviceJoinName: "Aeotec Door/Window Sensor 7 Pro EU"
-	}
+        // [ ]
+        fingerprint mfr: "0371", prod: "0102", model: "0007", deviceJoinName: "Aeotec Door/Window Sensor 7 Pro EU"
+    }
   
   // [X]
   preferences {
@@ -48,7 +48,7 @@ def parse(String description) {
     log.debug "parse: $description"
     
     def cmd = zwave.parse(description)
-    zwaveEvent(cmd)	
+    zwaveEvent(cmd)    
 }
 
 /* ZWave Handlers */
@@ -57,24 +57,53 @@ def parse(String description) {
 /* Basic Report */
 def zwaveEvent(hubitat.zwave.commands.basicv1.BasicReport cmd) {
    if (enableDebug)
-	log.debug "BasicReport:  ${cmd}"
+    log.debug "BasicReport:  ${cmd}"
+}
+
+
+/*
+********** 0x30 Sensor Binary v1 **********
+ Sensor Binary Get : 0x02
+----------------------------------------
+     List<Short> getPayload()
+     String format()
+*/
+def zwaveEvent(hubitat.zwave.commands.sensorbinaryv1.SensorBinaryGet cmd) {
+   if (enableDebug)
+    log.debug "v1 SensorBinaryGet:  ${cmd}"
 }
 
 /*
-********** 0x30 Sensor Binary **********
- Supported Get Sensor : 0x01
+********** 0x30 Sensor Binary v1 **********
+ Sensor Binary Report : 0x03
+----------------------------------------
+     Short sensorValue
+     static Short SENSOR_VALUE_DETECTED_AN_EVENT = 255
+     static Short SENSOR_VALUE_IDLE = 0
+     
+     List<Short> getPayload()
+     String format()
+*/
+def zwaveEvent(hubitat.zwave.commands.sensorbinaryv1.SensorBinaryReport cmd) {
+   if (enableDebug)
+    log.debug "v1 SensorBinaryReport:  ${cmd}"
+}
+
+/*
+********** 0x30 Sensor Binary v2 **********
+ Sensor Binary Supported Get Sensor : 0x01
 ----------------------------------------
      List<Short> getPayload()
      String format()
 */
 def zwaveEvent(hubitat.zwave.commands.sensorbinaryv2.SensorBinarySupportedGetSensor cmd) {
    if (enableDebug)
-	log.debug "SensorBinarySupportedGetSensor:  ${cmd}"
+    log.debug "v2 SensorBinarySupportedGetSensor:  ${cmd}"
 }
 
 /*
-********** 0x30 Sensor Binary **********
- Supported Get Sensor : 0x02
+********** 0x30 Sensor Binary v2 **********
+ Sensor Binary Get : 0x02
 ----------------------------------------
      Short sensorType
      
@@ -83,11 +112,11 @@ def zwaveEvent(hubitat.zwave.commands.sensorbinaryv2.SensorBinarySupportedGetSen
 */
 def zwaveEvent(hubitat.zwave.commands.sensorbinaryv2.SensorBinaryGet cmd) {
    if (enableDebug)
-	log.debug "SensorBinaryGet:  ${cmd}"
+    log.debug "v2 SensorBinaryGet:  ${cmd}"
 }
 
 /*
-********** 0x30 Sensor Binary **********
+********** 0x30 Sensor Binary v2 **********
  Sensor Binary Report : 0x03
 ----------------------------------------
      Short sensorType
@@ -114,7 +143,34 @@ def zwaveEvent(hubitat.zwave.commands.sensorbinaryv2.SensorBinaryGet cmd) {
 */
 def zwaveEvent(hubitat.zwave.commands.sensorbinaryv2.SensorBinaryReport cmd) {
    if (enableDebug)
-	log.debug "SensorBinaryReport:  ${cmd}"
+    log.debug "v2 SensorBinaryReport:  ${cmd}"
+}
+
+/*
+********** 0x30 Sensor Binary v2 **********
+ Sensor Binary Supported Sensor Report : 0x04
+----------------------------------------
+Boolean aux
+     Boolean co
+     Boolean co2
+     Boolean doorwindow
+     Boolean first
+     Boolean freeze
+     Boolean general
+     Boolean glassBreak
+     Boolean heat
+     Boolean motion
+     Boolean smoke
+     Boolean tamper
+     Boolean tilt
+     Boolean water
+     
+     List<Short> getPayload()
+     String format()
+*/
+def zwaveEvent(hubitat.zwave.commands.sensorbinaryv2.SensorBinarySupportedSensorReport cmd) {
+   if (enableDebug)
+    log.debug "v2 SensorBinarySupportedSensorReport:  ${cmd}"
 }
 
 def zwaveEvent(hubitat.zwave.Command cmd){
@@ -137,49 +193,49 @@ private getCommandClassVersions() {
 */
 
 /*
-0x20 Basic V2
-0x70 Configuration V4
-0x9F Security S2
-0x6C Supervision
-0x25 Switch Binary V2
-0x86 Version V3 
+    0x20 Basic V2
+    0x70 Configuration V4
+    0x9F Security S2
+    0x6C Supervision
+    0x25 Switch Binary V2
+    0x86 Version V3 
 */
-	
-	[0x20: 1,
-	 0x30: 1,
-	 0x70: 1,
-	 0x71: 1,
-	 0x72: 1,
-	 0x73: 1,
-	 0x80: 1,
-	 0x84: 1,
-	 0x85: 1,
-	 0x86: 1
-	]
+    
+    [0x20: 1,
+     0x30: 1,
+     0x70: 1,
+     0x71: 1,
+     0x72: 1,
+     0x73: 1,
+     0x80: 1,
+     0x84: 1,
+     0x85: 1,
+     0x86: 1
+    ]
 }
 
 /*
 def parse(String description) {
-	def result = null
-	if (description.startsWith("Err 106")) {
-		if ((zwaveInfo.zw == null && state.sec != 0) || zwaveInfo?.zw?.endsWith("s")) {
-			log.debug description
-		} else {
-			result = createEvent(
-				descriptionText: "This sensor failed to complete the network security key exchange. If you are unable to control it via SmartThings, you must remove it from your network and add it again.",
-				eventType: "ALERT",
-				name: "secureInclusion",
-				value: "failed",
-				isStateChange: true,
-			)
-		}
-	} else if (description != "updated") {
-		def cmd = zwave.parse(description, commandClassVersions)
-		if (cmd) {
-			result = zwaveEvent(cmd)
-		}
-	}
-	log.debug "parsed '$description' to $result"
-	return result
+    def result = null
+    if (description.startsWith("Err 106")) {
+        if ((zwaveInfo.zw == null && state.sec != 0) || zwaveInfo?.zw?.endsWith("s")) {
+            log.debug description
+        } else {
+            result = createEvent(
+                descriptionText: "This sensor failed to complete the network security key exchange. If you are unable to control it via SmartThings, you must remove it from your network and add it again.",
+                eventType: "ALERT",
+                name: "secureInclusion",
+                value: "failed",
+                isStateChange: true,
+            )
+        }
+    } else if (description != "updated") {
+        def cmd = zwave.parse(description, commandClassVersions)
+        if (cmd) {
+            result = zwaveEvent(cmd)
+        }
+    }
+    log.debug "parsed '$description' to $result"
+    return result
  */
 }
