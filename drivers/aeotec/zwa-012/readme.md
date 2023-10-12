@@ -29,4 +29,3 @@
 * Supervision Command Class, Version 1 (non-Secure)  
 * Transport Service Command Class, Version 2 (non-Secure) 
 * Central Scene Command Class, Version 3 (highest granted security level)
-* 
