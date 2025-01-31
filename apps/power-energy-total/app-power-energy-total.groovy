@@ -121,6 +121,9 @@ def calculateSummary() {
 
     powerMeters.each {
         if (_powerMetersDatazentrum.containsKey(it.displayName)) {
+    
+            // log.debug "0Power Meter Name: ${it.displayName} value: ${it.currentPower}W"
+            
             currentPartialDevice = _powerMetersDatazentrum[it.displayName]
             totalEnergyDatazentrum += currentPartialDevice.currentEnergy ?: 0
             totalPowerDatazentrum += currentPartialDevice.currentPower ?: 0
@@ -129,6 +132,7 @@ def calculateSummary() {
         else
         {
             if (_powerMetersKueche.containsKey(it.displayName)) {
+
                 currentPartialDevice = _powerMetersKueche[it.displayName]
                 totalEnergyKueche += currentPartialDevice.currentEnergy ?: 0
                 totalPowerKueche += currentPartialDevice.currentPower ?: 0
@@ -137,6 +141,7 @@ def calculateSummary() {
             else
             {
                 if (_powerMetersWohnzimmer.containsKey(it.displayName)) {
+
                     currentPartialDevice = _powerMetersWohnzimmer[it.displayName]
                     totalEnergyWohnzimmer += currentPartialDevice.currentEnergy ?: 0
                     totalPowerWohnzimmer += currentPartialDevice.currentPower ?: 0
@@ -145,8 +150,8 @@ def calculateSummary() {
             }
         }
 
-        totalEnergy += it.currentEnergy ?: 0
         totalPower += it.currentPower ?: 0
+        totalEnergy += it.currentEnergy ?: 0
     }
 
    if (powerEnergyMeterSummary.currentPower != totalPower) {
@@ -156,8 +161,8 @@ def calculateSummary() {
         powerEnergyMeterSummaryKueche.setPower(totalPowerKueche)
         powerEnergyMeterSummaryWohnzimmer.setPower(totalPowerWohnzimmer)
 
-        log.debug "Power Meter Current: ${powerEnergyMeterSummary.currentPower}W"
-        log.debug "Power Meter: ${totalPower}W"
+        // log.debug "Power Meter Current: ${powerEnergyMeterSummary.currentPower}W"
+        // log.debug "Power Meter: ${totalPower}W"
     }
 
    if (powerEnergyMeterSummary.currentEnergy != totalEnergy) {
@@ -167,7 +172,7 @@ def calculateSummary() {
         powerEnergyMeterSummaryKueche.setEnergy(totalEnergyKueche)
         powerEnergyMeterSummaryWohnzimmer.setEnergy(totalEnergyWohnzimmer)
 
-        log.debug "Energy Meter Current: ${powerEnergyMeterSummary.currentEnergy}kWh"
-        log.debug "Energy Meter: ${totalEnergy}kWh"
+        // log.debug "Energy Meter Current: ${powerEnergyMeterSummary.currentEnergy}kWh"
+        // log.debug "Energy Meter: ${totalEnergy}kWh"
    }
 }
