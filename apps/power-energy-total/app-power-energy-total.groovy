@@ -25,7 +25,7 @@
 # ----------------------------------------------------------------------------- */
 
 definition(
-    name: "oaa@power/energy meter summarizer",
+    name: "oaa@power/energy total",
     namespace: "oaa.hubitat.zwave",
     author: "Oleksiy Antonov",
     description: "Calculates total power and energy for selected devices",
@@ -59,27 +59,28 @@ preferences {
     section("Select the summary meter device /Wohnzimmer/:") {
         input "powerEnergyMeterSummaryWohnzimmer", "capability.powerMeter, capability.energyMeter", title: "Summary power/energy meter device /Wohnzimmer/", required: true, multiple: false
     }
+
+    section("Set the period of data refresh in sec:") {
+        input name: "calculationTimeout",
+            type: "enum",
+            title: "Sec",
+            options: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+            required: true
+    }
 }
 
 def installed() {
     initialize()
-    subscribeToEvents()
 }
 
 def updated() {
-    unsubscribe()
-    subscribeToEvents()
+    unschedule()
+    initialize()
 }
 
 def initialize() {
-    calculateSummary()
-}
-
-def subscribeToEvents() {
-    powerMeters.each {
-        subscribe(it, "power", powerHandler)
-        subscribe(it, "energy", powerHandler)
-    }
+    def timeoutSeconds = calculationTimeout.toInteger()
+    schedule("0/${timeoutSeconds} * * * * ?", calculateSummary)
 }
 
 def calculateSummary() {
@@ -148,19 +149,25 @@ def calculateSummary() {
         totalPower += it.currentPower ?: 0
     }
 
-    powerEnergyMeterSummary.setEnergy(totalEnergy)
-    powerEnergyMeterSummary.setPower(totalPower)
+   if (powerEnergyMeterSummary.currentPower != totalPower) {
+        powerEnergyMeterSummary.setPower(totalPower)
 
-    powerEnergyMeterSummaryDatazentrum.setEnergy(totalEnergyDatazentrum)
-    powerEnergyMeterSummaryDatazentrum.setPower(totalPowerDatazentrum)
+        powerEnergyMeterSummaryDatazentrum.setPower(totalPowerDatazentrum)
+        powerEnergyMeterSummaryKueche.setPower(totalPowerKueche)
+        powerEnergyMeterSummaryWohnzimmer.setPower(totalPowerWohnzimmer)
 
-    powerEnergyMeterSummaryKueche.setEnergy(totalEnergyKueche)
-    powerEnergyMeterSummaryKueche.setPower(totalPowerKueche)
+        log.debug "Power Meter Current: ${powerEnergyMeterSummary.currentPower}W"
+        log.debug "Power Meter: ${totalPower}W"
+    }
 
-    powerEnergyMeterSummaryWohnzimmer.setEnergy(totalEnergyWohnzimmer)
-    powerEnergyMeterSummaryWohnzimmer.setPower(totalPowerWohnzimmer)
-}
+   if (powerEnergyMeterSummary.currentEnergy != totalEnergy) {
+        powerEnergyMeterSummary.setEnergy(totalEnergy)
 
-def powerHandler(evt) {
-    calculateSummary()
+        powerEnergyMeterSummaryDatazentrum.setEnergy(totalEnergyDatazentrum)
+        powerEnergyMeterSummaryKueche.setEnergy(totalEnergyKueche)
+        powerEnergyMeterSummaryWohnzimmer.setEnergy(totalEnergyWohnzimmer)
+
+        log.debug "Energy Meter Current: ${powerEnergyMeterSummary.currentEnergy}kWh"
+        log.debug "Energy Meter: ${totalEnergy}kWh"
+   }
 }

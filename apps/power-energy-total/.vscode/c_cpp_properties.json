@@ -1,0 +1,20 @@
+{
+    "configurations": [
+        {
+            "name": "Z-Uno2",
+            "includePath": [
+                "/Users/oleksiy.antonov/wss/ws.778/SmartHomeZUno/src/xmaslights/xmas0000/Z-Uno2/hardware/cores/**",
+                "/Users/oleksiy.antonov/wss/ws.778/SmartHomeZUno/src/xmaslights/xmas0000/Z-Uno2/hardware/libraries/**",
+                "/Users/oleksiy.antonov/wss/ws.778/SmartHomeZUno/src/xmaslights/xmas0000/Z-Uno2/tools/gcc/lib/gcc/arm-none-eabi/7.2.1/include/**",
+                "/Users/oleksiy.antonov/wss/ws.778/SmartHomeZUno/src/xmaslights/xmas0000/Z-Uno2/tools/inc/**"
+            ],
+            "forcedInclude": [
+                "/Users/oleksiy.antonov/wss/ws.778/SmartHomeZUno/src/xmaslights/xmas0000/Z-Uno2/hardware/cores/includes/Arduino.h"
+            ],
+            "defines": [],
+            "intelliSenseMode": "gcc-arm",
+            "compilerPath": "/Users/oleksiy.antonov/wss/ws.778/SmartHomeZUno/src/xmaslights/xmas0000/Z-Uno2/tools/gcc/bin/arm-none-eabi-gcc"
+        }
+    ],
+    "version": 4
+}
